@@ -1,0 +1,121 @@
+syntax = "proto3";
+
+package types;
+
+option go_package = "/types";
+
+// Common types used across services
+message User {
+    int64 id = 1;
+    string display_name = 2;
+    bool is_guest = 3;
+    int64 created_at = 4;
+    optional string user_name = 5;
+    optional string avatar_url = 6;
+}
+
+message Realm {
+    int64 id = 1;
+    string name = 2;
+    int64 owner_id = 3;
+    int32 member_count = 4;
+    int64 created_at = 5;
+    optional string description = 6;
+    optional string icon_url = 7;
+}
+
+message Channel {
+    int64 id = 1;
+    string name = 2;
+    ChannelType type = 3;
+    int64 position = 4;
+    int64 created_at = 5;
+    optional int64 realm_id = 6;
+    optional string description = 7;
+}
+
+enum ChannelType {
+    CHANNEL_TYPE_UNSPECIFIED = 0;
+    CHANNEL_TYPE_TEXT = 1;
+    CHANNEL_TYPE_VOICE = 2;
+    CHANNEL_TYPE_DM = 3;
+    CHANNEL_TYPE_GROUP_DM = 4;
+}
+
+message Attachment {
+    int64 id = 1;
+    string filename = 2;
+    string url = 3;
+    int64 size = 4;
+    string content_type = 5;
+}
+
+message Reaction {
+    string emoji = 1;
+    repeated int64 user_ids = 2;
+    int64 count = 3;
+}
+
+message Message {
+    int64 id = 1;
+    int64 channel_id = 2;
+    int64 author_id = 3;
+    string content = 4;
+    int64 created_at = 5;
+    optional int64 edited_at = 6;
+    repeated Attachment attachments = 7;
+    repeated Reaction reactions = 8;
+    optional int64 reply_to = 9; // message ID this replies to
+}
+
+// Roles for permission system
+message Role {
+    int64 id = 1;
+    int64 realm_id = 2;
+    string name = 3;
+    int64 permissions = 4;
+    int32 position = 5;
+    bool is_hoisted = 6;
+    bool is_mentionable = 7;
+    bool is_managed = 8;
+    int64 created_at = 9;
+    optional int32 color = 10;
+}
+
+enum OverrideType {
+    OVERRIDE_TYPE_ROLE = 0;
+    OVERRIDE_TYPE_USER = 1;
+}
+
+message PermissionOverride {
+    int64 id = 1;
+    int64 channel_id = 2;
+    int64 target_id = 3;
+    OverrideType target_type = 4;
+    int64 allow_permissions = 5;
+    int64 deny_permissions = 6;
+}
+
+// Invite system
+message Invite {
+    string code = 1;
+    int64 realm_id = 2;
+    int64 created_by = 3;
+    optional int32 max_uses = 4;
+    optional int64 expires_at = 5;
+    int64 uses = 6;
+    int64 created_at = 7;
+}
+
+// Thread support 
+message Thread {
+    int64 id = 1;
+    int64 channel_id = 2;
+    int64 parent_message_id = 3;
+    optional string name = 4;
+    int64 created_by = 5;
+    int64 created_at = 6;
+    optional int64 last_message_at = 7;
+    int32 message_count = 8;
+    bool is_archived = 9;
+}

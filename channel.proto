@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package channel;
+
+import "types.proto";
+
+option go_package = "/channel";
+
+
+message CreateChannelRequest {
+    int64 realm_id = 1;
+    string name = 2;
+    types.ChannelType type = 3;
+    optional string description = 4;
+}
+
+message CreateChannelResponse {
+    types.Channel channel = 1;
+}
+
+message GetChannelRequest {
+    int64 channel_id = 1;
+}
+
+message GetChannelResponse {
+    types.Channel channel = 1;
+}
+
+message ListRealmChannelsRequest {
+    int64 realm_id = 1;
+}
+
+message ListRealmChannelsResponse {
+    repeated types.Channel channels = 1;
+}
+
+// DM Channels 
+message CreateDMChannelRequest {
+    repeated int64 user_ids = 1; // For group DMs
+}
+
+message CreateDMChannelResponse {
+    types.Channel channel = 1;
+}
+
+message ListDMChannelsRequest {}
+
+message ListDMChannelsResponse {
+    repeated types.Channel channels = 1;
+}

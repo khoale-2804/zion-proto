@@ -1,0 +1,115 @@
+syntax = "proto3";
+
+package realm;
+
+import "types.proto";
+
+option go_package = "/realm";
+
+
+// Realm CRUD
+message CreateRealmRequest {
+    string name = 1;
+    optional string description = 2;
+    optional string icon_url = 3;
+}
+
+message CreateRealmResponse {
+    types.Realm realm = 1;
+}
+
+message GetRealmRequest {
+    int64 realm_id = 1;
+}
+
+message GetRealmResponse {
+    types.Realm realm = 1;
+    repeated types.User members = 2;
+    repeated types.Channel channels = 3;
+}
+
+message UpdateRealmRequest {
+    int64 realm_id = 1;
+    optional string name = 2;
+    optional string description = 3;
+    optional string icon_url = 4;
+}
+
+message UpdateRealmResponse {
+    types.Realm realm = 1;
+}
+
+message DeleteRealmRequest {
+    int64 realm_id = 1;
+}
+
+message DeleteRealmResponse {}
+
+message KickMemberRequest {
+    int64 realm_id = 1;
+    int64 user_id = 2;
+}
+
+message KickMemberResponse {}
+
+message ListRealmMembersRequest {
+    int64 realm_id = 1;
+}
+
+message ListRealmMembersResponse {
+    repeated types.User members = 1;
+}
+
+
+message ListUserRealmsRequest {
+    int64 user_id = 1;
+}
+
+message ListUserRealmsResponse {
+    repeated types.Realm realms = 1;
+}
+
+message ListRealmInvitesRequest {
+    int64 realm_id = 1;
+}
+
+message ListRealmInvitesResponse {
+    repeated types.Invite invites = 1;
+}
+
+
+// Member management
+message JoinRealmRequest {
+    int64 realm_id = 1;
+    optional string invite_code = 2;
+}
+
+message JoinRealmResponse {
+    types.Realm realm = 1;
+}
+
+message LeaveRealmRequest {
+    int64 realm_id = 1;
+}
+
+message LeaveRealmResponse {}
+
+// Invites
+message CreateInviteRequest {
+    int64 realm_id = 1;
+    optional int32 max_uses = 2;
+    optional int64 expires_at = 3;
+}
+
+message CreateInviteResponse {
+    string invite_code = 1;
+    string invite_url = 2;
+}
+
+message UseInviteRequest {
+    string invite_code = 1;
+}
+
+message UseInviteResponse {
+    types.Realm realm = 1;
+}

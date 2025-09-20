@@ -1,0 +1,98 @@
+syntax = "proto3";
+
+package events;
+
+import "types.proto";
+
+option go_package = "/events";
+
+// WebSocket event wrapper 
+message WSPayload {
+    int32 op = 1;     // opcode
+    optional int64 seq = 2; // sequence number
+    optional string type = 3; // event type (for dispatch events)
+    oneof data {      // 'd' field equivalent
+        WSEvent event = 4; // for op 0 (dispatch)
+        Heartbeat heartbeat = 5; // for op 1 (heartbeat)
+        Identify identify = 6; // for op 2 (identify)
+        PresenceUpdate presence_update = 7; // for op 3 (presence update)
+    }
+}
+
+message WSEvent {
+    EventType type = 1;
+    oneof payload {
+        MessageEvent message_event = 2;
+        TypingEvent typing_event = 3;
+        PresenceEvent presence_event = 4;
+        RealmEvent realm_event = 5;
+        ChannelEvent channel_event = 6;
+    }
+}
+
+// Add WebSocket protocol messages
+message Heartbeat {
+    optional int64 last_sequence = 1;
+}
+
+message Identify {
+    string token = 1;
+}
+
+message PresenceUpdate {
+    int64 status = 1; // 'online', 'offline', 'idle', 'dnd'
+}
+
+enum OpCode {
+    OP_DISPATCH = 0;        // Event dispatch
+    OP_HEARTBEAT = 1;       // Heartbeat
+    OP_IDENTIFY = 2;        // Identify
+    OP_PRESENCE_UPDATE = 3; // Presence update
+    OP_VOICE_STATE_UPDATE = 4; // Voice state update
+    OP_RESUME = 6;          // Resume
+    OP_RECONNECT = 7;       // Reconnect
+    OP_REQUEST_GUILD_MEMBERS = 8; // Request realm members
+    OP_INVALID_SESSION = 9; // Invalid session
+    OP_HELLO = 10;          // Hello
+    OP_HEARTBEAT_ACK = 11;  // Heartbeat ACK
+}
+
+enum EventType {
+    EVENT_TYPE_UNSPECIFIED = 0;
+    EVENT_TYPE_MESSAGE = 1;
+    EVENT_TYPE_MESSAGE_EDIT = 2;
+    EVENT_TYPE_MESSAGE_DELETE = 3;
+    EVENT_TYPE_TYPING_START = 4;
+    EVENT_TYPE_TYPING_STOP = 5;
+    EVENT_TYPE_USER_ONLINE = 6;
+    EVENT_TYPE_USER_OFFLINE = 7;
+    EVENT_TYPE_REALM_CREATE = 8;
+    EVENT_TYPE_REALM_DELETE = 9;
+    EVENT_TYPE_CHANNEL_CREATE = 10;
+    EVENT_TYPE_CHANNEL_DELETE = 11;
+}
+
+message MessageEvent {
+    types.Message message = 1;
+}
+
+message TypingEvent {
+    int64 channel_id = 1;
+    int64 user_id = 2;
+    bool is_typing = 3;
+}
+
+message PresenceEvent {
+    int64 user_id = 1;
+    bool is_online = 2;
+}
+
+message RealmEvent {
+    types.Realm realm = 1;
+    string action = 2; // "created", "deleted", "updated"
+}
+
+message ChannelEvent {
+    types.Channel channel = 1;
+    string action = 2; // "created", "deleted", "updated"
+}

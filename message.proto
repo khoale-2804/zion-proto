@@ -1,0 +1,112 @@
+syntax = "proto3";
+
+package message;
+
+import "types.proto";
+
+option go_package = "/message";
+
+
+message SendMessageRequest {
+    int64 channel_id = 1;
+    string content = 2;
+    optional int64 reply_to = 3;
+    repeated types.Attachment attachments = 4;
+}
+
+message SendMessageResponse {
+    types.Message message = 1;
+}
+
+message GetMessageRequest {
+    int64 message_id = 1;
+}
+
+message GetMessageResponse {
+    types.Message message = 1;
+}
+
+message ListMessagesRequest {
+    int64 channel_id = 1;
+    optional int64 before = 2; // message ID for pagination
+    optional int64 limit = 3; // default 50, max 100
+}
+
+message ListMessagesResponse {
+    repeated types.Message messages = 1;
+    bool has_more = 2;
+}
+
+message EditMessageRequest {
+    int64 message_id = 1;
+    string content = 2;
+}
+
+message EditMessageResponse {
+    types.Message message = 1;
+}
+
+message DeleteMessageRequest {
+    int64 message_id = 1;
+}
+
+message DeleteMessageResponse {}
+
+// Reactions
+message AddReactionRequest {
+    int64 message_id = 1;
+    string emoji = 2;
+}
+
+message AddReactionResponse {}
+
+message RemoveReactionRequest {
+    int64 message_id = 1;
+    string emoji = 2;
+}
+
+message RemoveReactionResponse {}
+
+
+// Typing Inicators
+message StartTypingRequest {
+    int64 channel_id = 1;
+}
+
+message StartTypingResponse {}
+
+message StopTypingRequest {
+    int64 channel_id = 1;
+}
+
+message StopTypingResponse {}
+
+
+// Pin/unpin messages
+message PinMessageRequest {
+    int64 message_id = 1;
+}
+
+message PinMessageResponse {}
+
+message UnpinMessageRequest {
+    int64 message_id = 1;
+}
+
+message UnpinMessageResponse {}
+
+// Get message edit history 
+message GetEditHistoryRequest {
+    int64 message_id = 1;
+}
+
+message GetEditHistoryResponse {
+    repeated MessageEdit edits = 1;
+}
+
+message MessageEdit {
+    int64 edit_timestamp = 1;
+    string old_content = 2;
+    string new_content = 3;
+    int64 edited_by = 4;
+}
