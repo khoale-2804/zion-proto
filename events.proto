@@ -4,7 +4,7 @@ package events;
 
 import "types.proto";
 
-option go_package = "/events";
+option go_package = "zion-api/internal/proto/events";
 
 // WebSocket event wrapper 
 message WSPayload {

@@ -4,7 +4,7 @@ package auth;
 
 import "types.proto";
 
-option go_package = "/auth";
+option go_package = "zion-api/internal/proto/auth";
 
 
 

@@ -4,7 +4,7 @@ package channel;
 
 import "types.proto";
 
-option go_package = "/channel";
+option go_package = "zion-api/internal/proto/channel";
 
 
 message CreateChannelRequest {
